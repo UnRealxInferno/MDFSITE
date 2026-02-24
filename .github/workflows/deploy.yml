@@ -42,6 +42,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
+            if exist "D:\MDF WEBSITE\Website\dist\web.config" copy /Y "D:\MDF WEBSITE\Website\dist\web.config" "D:\MDF WEBSITE\web.config.bak"
             if exist "D:\MDF WEBSITE\Website\dist" rmdir /S /Q "D:\MDF WEBSITE\Website\dist"
 
       - name: Deploy dist to VPS
@@ -53,11 +54,12 @@ jobs:
           source: "dist/"
           target: 'D:/MDF WEBSITE/Website'
 
-      - name: Start app on VPS
+      - name: Restore web.config and start app on VPS
         uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
+            if exist "D:\MDF WEBSITE\web.config.bak" copy /Y "D:\MDF WEBSITE\web.config.bak" "D:\MDF WEBSITE\Website\dist\web.config"
             cd /d "D:\MDF WEBSITE\Website" && start /B node dist\index.cjs > "D:\MDF WEBSITE\Website\app.log" 2>&1
