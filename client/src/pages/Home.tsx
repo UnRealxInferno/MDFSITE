@@ -1,4 +1,3 @@
-import { Link } from "wouter";
 import { Menu, X, Shield, ChevronRight, Crosshair, Map, Activity, BookOpen, Users, Clock, CheckCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
@@ -35,14 +34,12 @@ export default function Home() {
         }`}
       >
         <div className="container mx-auto px-4 md:px-8 flex justify-between items-center">
-          <Link href="/">
-            <span className="flex items-center gap-3 group cursor-pointer" data-testid="link-logo">
+          <a href="/" className="flex items-center gap-3 group" data-testid="link-logo">
               <img src={logoImg} alt="M.D.F Logo" className="w-10 h-10" />
               <span className="font-heading text-2xl font-bold tracking-[0.2em]">
                 M.D.F PMC
               </span>
-            </span>
-          </Link>
+          </a>
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8 font-heading text-xs tracking-[0.3em] font-bold">
@@ -203,7 +200,7 @@ export default function Home() {
               </div>
               <div className="flex items-start gap-4">
                 <CheckCircle className="w-5 h-5 text-white/60 mt-1 flex-shrink-0" />
-                <p className="text-muted-foreground font-bold">18+ NO EXCEPTIONS</p>
+                <p className="text-muted-foreground font-bold" aria-label="Eighteen years or older, no exceptions">18+ NO EXCEPTIONS</p>
               </div>
             </div>
 
