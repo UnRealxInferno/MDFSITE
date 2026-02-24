@@ -43,7 +43,6 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
             if exist "D:\MDF WEBSITE\Website\dist" rmdir /S /Q "D:\MDF WEBSITE\Website\dist"
-            if exist "C:\MDFTemp" rmdir /S /Q "C:\MDFTemp"
 
       - name: Deploy dist to VPS
         uses: appleboy/scp-action@v0.1.7
@@ -52,17 +51,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
           source: "dist/"
-          target: 'C:/MDFTemp'
-
-      - name: Move dist to website directory
-        uses: appleboy/ssh-action@v1.2.2
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          password: ${{ secrets.VPS_PASSWORD }}
-          script: |
-            xcopy /E /Y /I "C:\MDFTemp\dist" "D:\MDF WEBSITE\Website\dist"
-            rmdir /S /Q "C:\MDFTemp"
+          target: 'D:/MDF WEBSITE/Website'
 
       - name: Start app on VPS
         uses: appleboy/ssh-action@v1.2.2
