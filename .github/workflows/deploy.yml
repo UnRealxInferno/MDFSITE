@@ -32,11 +32,8 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
-          script: |
-            taskkill /F /T /IM node.exe 2>nul
-            rem wait ~3s for Windows to release file handles after process termination
-            ping -n 4 127.0.0.1 >nul 2>&1
-            exit 0
+          # Single line: kill node.exe+children, wait ~3s for Windows to release file handles, then force exit 0
+          script: taskkill /F /T /IM node.exe 2>nul & ping -n 4 127.0.0.1 >nul 2>&1 & exit 0
 
       - name: Clean old dist on VPS
         uses: appleboy/ssh-action@v1.2.2
