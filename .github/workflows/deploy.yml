@@ -51,7 +51,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
           source: "dist/"
-          target: 'D:/MDF WEBSITE/Website'
+          target: 'D:\MDF WEBSITE\Website'
 
       - name: Start app on VPS
         uses: appleboy/ssh-action@v1.2.2
