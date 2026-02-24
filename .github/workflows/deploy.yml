@@ -33,7 +33,10 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
-            taskkill /F /IM node.exe & exit 0
+            taskkill /F /T /IM node.exe 2>nul
+            rem wait ~3s for Windows to release file handles after process termination
+            ping -n 4 127.0.0.1 >nul 2>&1
+            exit 0
 
       - name: Clean old dist on VPS
         uses: appleboy/ssh-action@v1.2.2
@@ -43,6 +46,7 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
             if exist "D:\MDF WEBSITE\Website\dist" rmdir /S /Q "D:\MDF WEBSITE\Website\dist"
+            if exist "C:\MDFTemp" rmdir /S /Q "C:\MDFTemp"
 
       - name: Deploy dist to VPS
         uses: appleboy/scp-action@v0.1.7
@@ -51,7 +55,17 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
           source: "dist/"
-          target: 'D:/MDF WEBSITE/Website'
+          target: 'C:/MDFTemp'
+
+      - name: Move dist to website directory
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+            xcopy /E /Y /I "C:\MDFTemp\dist" "D:\MDF WEBSITE\Website\dist"
+            rmdir /S /Q "C:\MDFTemp"
 
       - name: Start app on VPS
         uses: appleboy/ssh-action@v1.2.2
