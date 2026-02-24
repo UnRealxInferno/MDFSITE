@@ -154,24 +154,27 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
             <div className="group relative aspect-[4/5] overflow-hidden bg-zinc-900 border border-white/5">
-              <img src={securityImg} alt="Security" className="w-full h-full object-cover grayscale opacity-40 group-hover:opacity-60 transition-all duration-700 group-hover:scale-105" />
+              <img src={securityImg} alt="VIP Transport" className="w-full h-full object-cover grayscale opacity-40 group-hover:opacity-60 transition-all duration-700 group-hover:scale-105" />
               <div className="absolute inset-0 p-8 flex flex-col justify-end bg-gradient-to-t from-black to-transparent">
-                <h3 className="text-2xl font-heading font-bold mb-2">PROTECTION</h3>
-                <p className="text-xs text-muted-foreground tracking-widest uppercase">Asset Security // Transport Control</p>
+                <h3 className="text-2xl font-heading font-bold mb-2">VIP TRANSPORT</h3>
+                <p className="text-xs text-muted-foreground tracking-widest uppercase mb-2">Executive Protection // Secure Mobility</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">Discreet, reliable protection for high-value personnel. We move your principal from point A to point B — safely, every time.</p>
               </div>
             </div>
             <div className="group relative aspect-[4/5] overflow-hidden bg-zinc-900 border border-white/5">
-              <img src={boatImg} alt="Maritime" className="w-full h-full object-cover grayscale opacity-40 group-hover:opacity-60 transition-all duration-700 group-hover:scale-105" />
+              <img src={boatImg} alt="Marine Operations" className="w-full h-full object-cover grayscale opacity-40 group-hover:opacity-60 transition-all duration-700 group-hover:scale-105" />
               <div className="absolute inset-0 p-8 flex flex-col justify-end bg-gradient-to-t from-black to-transparent">
-                <h3 className="text-2xl font-heading font-bold mb-2">INTERDICTION</h3>
-                <p className="text-xs text-muted-foreground tracking-widest uppercase">Maritime Ops // Area Denial</p>
+                <h3 className="text-2xl font-heading font-bold mb-2">MARINE OPERATIONS</h3>
+                <p className="text-xs text-muted-foreground tracking-widest uppercase mb-2">Maritime Security // Coastal Patrol</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">Protecting assets at sea and along contested coastlines. Our maritime teams are equipped and ready for any littoral environment.</p>
               </div>
             </div>
             <div className="group relative aspect-[4/5] overflow-hidden bg-zinc-900 border border-white/5">
-              <img src={heliImg} alt="Airborne" className="w-full h-full object-cover grayscale opacity-40 group-hover:opacity-60 transition-all duration-700 group-hover:scale-105" />
+              <img src={heliImg} alt="Airborne Operations" className="w-full h-full object-cover grayscale opacity-40 group-hover:opacity-60 transition-all duration-700 group-hover:scale-105" />
               <div className="absolute inset-0 p-8 flex flex-col justify-end bg-gradient-to-t from-black to-transparent">
-                <h3 className="text-2xl font-heading font-bold mb-2">INSERTION</h3>
-                <p className="text-xs text-muted-foreground tracking-widest uppercase">Rapid Deployment // Air Cavalry</p>
+                <h3 className="text-2xl font-heading font-bold mb-2">AIRBORNE OPERATIONS</h3>
+                <p className="text-xs text-muted-foreground tracking-widest uppercase mb-2">Rapid Deployment // Air Assault</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">Swift insertion and extraction by air. When time is critical and ground routes are compromised, we deliver.</p>
               </div>
             </div>
           </div>
@@ -283,7 +286,7 @@ export default function Home() {
              <span className="font-heading font-bold tracking-[0.2em]">M.D.F PMC</span>
           </div>
           <div className="text-[10px] tracking-[0.3em] uppercase">
-            &copy; {new Date().getFullYear()} M.D.F PMC
+            &copy; 2017-2026 M.D.F PMC
           </div>
           <div className="flex gap-8 text-[10px] tracking-[0.3em] uppercase">
             <a href="#handbook" className="hover:text-white">Handbook</a>
