@@ -74,7 +74,7 @@ export default function Home() {
 
         <div className="container relative z-10 mx-auto px-4 md:px-8 text-center flex flex-col items-center">
           <img src={logoImg} alt="M.D.F PMC" className="w-32 h-32 mb-8 opacity-80" />
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-heading font-black leading-none mb-6 tracking-tighter">
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-heading font-black leading-none mb-6 tracking-tighter glitch">
             M.D.F <span className="text-white/20">PMC</span>
           </h1>
           
