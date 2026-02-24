@@ -26,6 +26,15 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Stop app on VPS
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+            pm2 stop mdf-site
+
       - name: Clean old dist on VPS
         uses: appleboy/ssh-action@v1.2.2
         with:
@@ -43,3 +52,12 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           source: "dist/"
           target: 'D:/MDF WEBSITE/Website'
+
+      - name: Start app on VPS
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+            cd /d "D:\MDF WEBSITE\Website" && pm2 restart mdf-site || pm2 start dist\index.cjs --name mdf-site
