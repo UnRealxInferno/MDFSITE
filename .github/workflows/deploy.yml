@@ -12,20 +12,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
       - name: Stop app on VPS
         uses: appleboy/ssh-action@v1.2.2
         with:
@@ -35,23 +21,14 @@ jobs:
           # Single line: kill node.exe+children, wait ~3s for Windows to release file handles, then force exit 0
           script: taskkill /F /T /IM node.exe 2>nul & ping -n 4 127.0.0.1 >nul 2>&1 & exit 0
 
-      - name: Clean old dist on VPS
+      - name: Pull latest code on VPS
         uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
-            if exist "D:\MDF WEBSITE\Website\dist" rmdir /S /Q "D:\MDF WEBSITE\Website\dist"
-
-      - name: Deploy dist to VPS
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          password: ${{ secrets.VPS_PASSWORD }}
-          source: "dist/"
-          target: 'D:\MDF WEBSITE\Website'
+            cd /d "D:\MDF WEBSITE\Website" && git fetch origin main && git reset --hard origin/main
 
       - name: Start app on VPS
         uses: appleboy/ssh-action@v1.2.2
