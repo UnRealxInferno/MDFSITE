@@ -23,10 +23,12 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const container = votingWidgetRef.current;
+    if (!container) return;
     const script = document.createElement("script");
     script.src = "https://milsimunits.com/embed/widget.js";
     script.async = true;
-    votingWidgetRef.current?.appendChild(script);
+    container.appendChild(script);
     return () => {
       script.remove();
     };
@@ -305,9 +307,9 @@ export default function Home() {
                 width="350"
                 height="500"
                 allowTransparency={true}
-                frameBorder="0"
                 sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
                 title="M.D.F PMC Discord"
+                style={{ border: 0 }}
               ></iframe>
             </div>
             {/* Voting Widget */}
