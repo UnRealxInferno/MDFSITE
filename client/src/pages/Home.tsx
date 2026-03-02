@@ -1,5 +1,5 @@
 import { Menu, X, Shield, ChevronRight, Crosshair, Map, Activity, BookOpen, Users, Clock, CheckCircle } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 
 // Assets
@@ -12,6 +12,7 @@ import heliImg from "@assets/unknown_orig_1771880297339.png";
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const votingWidgetRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,6 +20,16 @@ export default function Home() {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://milsimunits.com/embed/widget.js";
+    script.async = true;
+    votingWidgetRef.current?.appendChild(script);
+    return () => {
+      script.remove();
+    };
   }, []);
 
   return (
@@ -47,6 +58,7 @@ export default function Home() {
             <a href="#ops" className="hover:text-white/60 transition-colors uppercase" data-testid="link-nav-ops">Operations</a>
             <a href="#requirements" className="hover:text-white/60 transition-colors uppercase" data-testid="link-nav-requirements">Requirements</a>
             <a href="#recruitment" className="hover:text-white/60 transition-colors uppercase" data-testid="link-nav-recruitment">Apply</a>
+            <a href="#community" className="hover:text-white/60 transition-colors uppercase" data-testid="link-nav-community">Community</a>
             <a href="#handbook" className="hover:text-white/60 transition-colors uppercase" data-testid="link-nav-handbook">Handbook</a>
           </div>
 
@@ -275,6 +287,39 @@ export default function Home() {
               View Handbook <ChevronRight className="ml-2" />
             </Button>
           </a>
+        </div>
+      </section>
+
+      {/* Community Section - Discord & Voting */}
+      <section id="community" className="py-24 border-t border-white/5">
+        <div className="container mx-auto px-4 md:px-8">
+          <h2 className="text-4xl md:text-6xl font-heading font-black mb-16 tracking-tighter uppercase text-center">
+            Our <span className="text-white/20">Community</span>
+          </h2>
+          <div className="flex flex-col md:flex-row items-start justify-center gap-12">
+            {/* Discord Widget */}
+            <div className="flex flex-col items-center">
+              <h3 className="font-heading text-lg font-bold mb-6 tracking-widest uppercase text-muted-foreground">Join Our Discord</h3>
+              <iframe
+                src="https://discord.com/widget?id=501550568125497344&theme=dark"
+                width="350"
+                height="500"
+                allowTransparency={true}
+                frameBorder="0"
+                sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
+                title="M.D.F PMC Discord"
+              ></iframe>
+            </div>
+            {/* Voting Widget */}
+            <div className="flex flex-col items-center" ref={votingWidgetRef}>
+              <h3 className="font-heading text-lg font-bold mb-6 tracking-widest uppercase text-muted-foreground">Vote For Us</h3>
+              <div
+                id="milsim-unit-widget"
+                data-unit-id="c128067d-5a1d-4c03-a001-4e2ecdf5a83f"
+                data-ranking-type="overall"
+              ></div>
+            </div>
+          </div>
         </div>
       </section>
 
