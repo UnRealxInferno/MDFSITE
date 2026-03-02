@@ -1,5 +1,5 @@
 import { Menu, X, Shield, ChevronRight, Crosshair, Map, Activity, BookOpen, Users, Clock, CheckCircle } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 // Assets
@@ -12,26 +12,12 @@ import heliImg from "@assets/unknown_orig_1771880297339.png";
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const votingWidgetRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const container = votingWidgetRef.current;
-    if (!container) return;
-    const script = document.createElement("script");
-    script.src = "https://milsimunits.com/embed/widget.js";
-    script.async = true;
-    container.appendChild(script);
-    return () => {
-      script.remove();
-    };
   }, []);
 
   return (
@@ -313,13 +299,15 @@ export default function Home() {
               ></iframe>
             </div>
             {/* Voting Widget */}
-            <div className="flex flex-col items-center" ref={votingWidgetRef}>
+            <div className="flex flex-col items-center">
               <h3 className="font-heading text-lg font-bold mb-6 tracking-widest uppercase text-muted-foreground">Vote For Us</h3>
-              <div
-                id="milsim-unit-widget"
-                data-unit-id="c128067d-5a1d-4c03-a001-4e2ecdf5a83f"
-                data-ranking-type="overall"
-              ></div>
+              <iframe
+                src="https://milsimunits.com/embed/mdf-pmc?type=overall"
+                width="350"
+                height="500"
+                title="MDF PMC MilSim Units Ranking"
+                style={{ border: 0 }}
+              ></iframe>
             </div>
           </div>
         </div>
