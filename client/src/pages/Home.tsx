@@ -266,7 +266,7 @@ export default function Home() {
           <p className="text-muted-foreground mb-12 text-lg max-w-2xl mx-auto">
             Ready to join? Fill out our application form to get started.
           </p>
-          <a href="https://forms.gle/DvNtsqjMjP28gdhH7" target="_blank" rel="noopener noreferrer">
+          <a href="https://dyno.gg/form/8b3f1018" target="_blank" rel="noopener noreferrer">
             <Button size="lg" className="bg-white text-black hover:bg-white/90 rounded-none font-heading text-xl tracking-[0.4em] uppercase h-24 px-16 group" data-testid="button-cta-apply">
               Apply Now <ChevronRight className="ml-4 group-hover:translate-x-2 transition-transform" />
             </Button>
