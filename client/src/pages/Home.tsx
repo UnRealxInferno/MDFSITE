@@ -9,6 +9,15 @@ import securityImg from "@assets/security-detail_orig_1771880297339.png";
 import boatImg from "@assets/showboat_orig_1771880297339.png";
 import heliImg from "@assets/unknown_orig_1771880297339.png";
 
+const NAV_LINKS = [
+  { href: "#about", label: "About", testId: "link-nav-about" },
+  { href: "#ops", label: "Operations", testId: "link-nav-ops" },
+  { href: "#requirements", label: "Requirements", testId: "link-nav-requirements" },
+  { href: "#recruitment", label: "Apply", testId: "link-nav-recruitment" },
+  { href: "#community", label: "Community", testId: "link-nav-community" },
+  { href: "#handbook", label: "Handbook", testId: "link-nav-handbook" },
+];
+
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -42,12 +51,9 @@ export default function Home() {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8 font-heading text-xs tracking-[0.3em] font-bold">
-            <a href="#about" className="hover:text-white/60 transition-colors uppercase" data-testid="link-nav-about">About</a>
-            <a href="#ops" className="hover:text-white/60 transition-colors uppercase" data-testid="link-nav-ops">Operations</a>
-            <a href="#requirements" className="hover:text-white/60 transition-colors uppercase" data-testid="link-nav-requirements">Requirements</a>
-            <a href="#recruitment" className="hover:text-white/60 transition-colors uppercase" data-testid="link-nav-recruitment">Apply</a>
-            <a href="#community" className="hover:text-white/60 transition-colors uppercase" data-testid="link-nav-community">Community</a>
-            <a href="#handbook" className="hover:text-white/60 transition-colors uppercase" data-testid="link-nav-handbook">Handbook</a>
+            {NAV_LINKS.map(({ href, label, testId }) => (
+              <a key={href} href={href} className="hover:text-white/60 transition-colors uppercase" data-testid={testId}>{label}</a>
+            ))}
           </div>
 
           {/* Mobile Toggle */}
@@ -59,6 +65,17 @@ export default function Home() {
             {mobileMenuOpen ? <X /> : <Menu />}
           </button>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-background/95 backdrop-blur-md border-t border-white/10">
+            <div className="container mx-auto px-4 py-4 flex flex-col gap-4 font-heading text-xs tracking-[0.3em] font-bold">
+              {NAV_LINKS.map(({ href, label, testId }) => (
+                <a key={href} href={href} className="hover:text-white/60 transition-colors uppercase py-2" onClick={() => setMobileMenuOpen(false)} data-testid={`mobile-${testId}`}>{label}</a>
+              ))}
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Hero Section */}
