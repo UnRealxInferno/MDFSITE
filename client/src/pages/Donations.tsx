@@ -1,9 +1,29 @@
 import { useState, useEffect } from "react";
-import { Menu, X, Heart, Shield, Server, Wrench, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Menu, X, Heart, Shield, Server, Wrench } from "lucide-react";
 
 // Assets
 import logoImg from "@assets/MDFNEW_1771880281933.png";
+
+// ─── PayPal configuration ─────────────────────────────────────────────────────
+// Replace these two values with your real IDs from your PayPal dashboard:
+//   DONATE_BUTTON_ID  → paypal.com/donate/buttons  (hosted donate button ID)
+//   SUBSCRIPTION_PLAN_ID → paypal.com/billing/plans  (subscription plan ID)
+const DONATE_BUTTON_ID = "REPLACE_WITH_BUTTON_ID";
+const SUBSCRIPTION_PLAN_ID = "REPLACE_WITH_PLAN_ID";
+// ─────────────────────────────────────────────────────────────────────────────
+
+declare global {
+  interface Window {
+    PayPal?: {
+      Donation: {
+        Button: (cfg: object) => { render: (sel: string) => void };
+      };
+    };
+    paypal?: {
+      Buttons: (cfg: object) => { render: (sel: string) => void };
+    };
+  }
+}
 
 export default function Donations() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -15,6 +35,77 @@ export default function Donations() {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // ── PayPal Donate SDK (one-time donation) ─────────────────────────────────
+  // Mirrors PayPal's generated code:
+  //   Part 1: <script src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js">
+  //   Part 2: PayPal.Donation.Button({...}).render('#donate-button-container')
+  useEffect(() => {
+    const containerId = "donate-button-container";
+    const container = document.getElementById(containerId);
+    if (!container || container.childElementCount > 0) return;
+
+    const init = () => {
+      window.PayPal?.Donation.Button({
+        env: "production",
+        hosted_button_id: DONATE_BUTTON_ID,
+        image: {
+          src: "https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif",
+          alt: "Donate with PayPal button",
+          title: "PayPal - The safer, easier way to pay online!",
+        },
+      }).render(`#${containerId}`);
+    };
+
+    if (window.PayPal) {
+      init();
+    } else {
+      const script = document.createElement("script");
+      script.id = "paypal-donate-sdk";
+      script.src = "https://www.paypalobjects.com/donate/sdk/donate-sdk.js";
+      script.charset = "UTF-8";
+      script.onload = init;
+      document.head.appendChild(script);
+    }
+  }, []);
+
+  // ── PayPal JS SDK (monthly subscription) ─────────────────────────────────
+  // Mirrors PayPal's generated code:
+  //   Part 1: <script src="https://www.paypal.com/sdk/js?client-id=...&vault=true&intent=subscription">
+  //   Part 2: paypal.Buttons({ createSubscription, onApprove }).render('#paypal-button-container')
+  useEffect(() => {
+    const containerId = "paypal-subscription-container";
+    const container = document.getElementById(containerId);
+    if (!container || container.childElementCount > 0) return;
+
+    const init = () => {
+      window.paypal?.Buttons({
+        style: {
+          shape: "rect",
+          color: "gold",
+          layout: "vertical",
+          label: "subscribe",
+        },
+        createSubscription: (_data: unknown, actions: { subscription: { create: (o: object) => Promise<string> } }) => {
+          return actions.subscription.create({ plan_id: SUBSCRIPTION_PLAN_ID });
+        },
+        onApprove: (data: { subscriptionID: string }) => {
+          alert(`Subscription active! ID: ${data.subscriptionID}`);
+        },
+      }).render(`#${containerId}`);
+    };
+
+    if (window.paypal) {
+      init();
+    } else {
+      const script = document.createElement("script");
+      script.id = "paypal-subscription-sdk";
+      // NOTE: replace the client-id value with your PayPal REST app client ID
+      script.src = "https://www.paypal.com/sdk/js?client-id=REPLACE_WITH_CLIENT_ID&vault=true&intent=subscription";
+      script.onload = init;
+      document.head.appendChild(script);
+    }
   }, []);
 
   return (
@@ -144,20 +235,12 @@ export default function Donations() {
                 </p>
               </div>
               <div className="h-[1px] bg-white/10"></div>
-              <div className="flex flex-col items-center gap-4">
-                {/* TODO: Replace REPLACE_WITH_BUTTON_ID with your PayPal hosted button ID from paypal.com/buttons */}
-                <form action="https://www.paypal.com/donate" method="post" target="_blank">
-                  <input type="hidden" name="hosted_button_id" value="REPLACE_WITH_BUTTON_ID" />
-                  <button
-                    type="submit"
-                    className="w-full bg-white text-black hover:bg-white/90 font-heading text-sm tracking-[0.3em] uppercase h-14 px-10 flex items-center justify-center gap-3 transition-colors"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
-                      <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 6.082-8.558 6.082h-2.19a2.16 2.16 0 0 0-2.13 1.82l-1.12 7.106-.314 2H9.6l.388-2.46.006-.04 1.112-7.048.071-.45h.57c4.506 0 8.033-1.83 9.063-7.118.176-.91.18-1.672-.588-2.605z"/>
-                    </svg>
-                    Donate via PayPal
-                  </button>
-                </form>
+              <div className="flex flex-col items-center gap-3">
+                {/*
+                  PayPal Donate SDK button — rendered here by the useEffect above.
+                  Set DONATE_BUTTON_ID at the top of this file to your hosted button ID.
+                */}
+                <div id="donate-button-container" className="w-full flex justify-center min-h-[52px]"></div>
                 <p className="text-[10px] text-white/30 tracking-widest uppercase text-center">
                   Secured by PayPal
                 </p>
@@ -176,20 +259,13 @@ export default function Donations() {
                 </p>
               </div>
               <div className="h-[1px] bg-white/10"></div>
-              <div className="flex flex-col items-center gap-4">
-                {/* TODO: Replace REPLACE_WITH_PLAN_ID with your PayPal subscription plan ID from paypal.com/billing/plans */}
-                <form action="https://www.paypal.com/webapps/billing/plans/subscribe" method="post" target="_blank">
-                  <input type="hidden" name="plan_id" value="REPLACE_WITH_PLAN_ID" />
-                  <button
-                    type="submit"
-                    className="w-full border border-white text-white hover:bg-white hover:text-black font-heading text-sm tracking-[0.3em] uppercase h-14 px-10 flex items-center justify-center gap-3 transition-colors"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
-                      <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 6.082-8.558 6.082h-2.19a2.16 2.16 0 0 0-2.13 1.82l-1.12 7.106-.314 2H9.6l.388-2.46.006-.04 1.112-7.048.071-.45h.57c4.506 0 8.033-1.83 9.063-7.118.176-.91.18-1.672-.588-2.605z"/>
-                    </svg>
-                    Subscribe via PayPal
-                  </button>
-                </form>
+              <div className="flex flex-col items-center gap-3">
+                {/*
+                  PayPal JS SDK subscription button — rendered here by the useEffect above.
+                  Set SUBSCRIPTION_PLAN_ID and replace client-id in the script src at the
+                  top of this file with your PayPal REST app client ID.
+                */}
+                <div id="paypal-subscription-container" className="w-full flex justify-center min-h-[52px]"></div>
                 <p className="text-[10px] text-white/30 tracking-widest uppercase text-center">
                   Cancel anytime // Secured by PayPal
                 </p>
