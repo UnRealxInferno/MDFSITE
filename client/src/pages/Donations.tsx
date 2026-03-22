@@ -4,21 +4,6 @@ import { Menu, X, Heart, Shield, Server, Wrench } from "lucide-react";
 // Assets
 import logoImg from "@assets/MDFNEW_1771880281933.png";
 
-// ─── PayPal configuration ─────────────────────────────────────────────────────
-// Hosted donate button ID from paypal.com/donate/buttons
-const DONATE_BUTTON_ID = "QZZJ8PS92P6DL";
-// ─────────────────────────────────────────────────────────────────────────────
-
-declare global {
-  interface Window {
-    PayPal?: {
-      Donation: {
-        Button: (cfg: object) => { render: (sel: string) => void };
-      };
-    };
-  }
-}
-
 export default function Donations() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -29,40 +14,6 @@ export default function Donations() {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // ── PayPal Donate SDK ────────────────────────────────────────────────────────
-  // Mirrors PayPal's generated code:
-  //   Part 1: <script src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js">
-  //   Part 2: PayPal.Donation.Button({...}).render('#donate-button-container')
-  // The hosted button already lets donors choose one-time or recurring at checkout.
-  useEffect(() => {
-    const containerId = "donate-button-container";
-    const container = document.getElementById(containerId);
-    if (!container || container.childElementCount > 0) return;
-
-    const init = () => {
-      window.PayPal?.Donation.Button({
-        env: "production",
-        hosted_button_id: DONATE_BUTTON_ID,
-        image: {
-          src: "https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif",
-          alt: "Donate with PayPal button",
-          title: "PayPal - The safer, easier way to pay online!",
-        },
-      }).render(`#${containerId}`);
-    };
-
-    if (window.PayPal) {
-      init();
-    } else {
-      const script = document.createElement("script");
-      script.id = "paypal-donate-sdk";
-      script.src = "https://www.paypalobjects.com/donate/sdk/donate-sdk.js";
-      script.charset = "UTF-8";
-      script.onload = init;
-      document.head.appendChild(script);
-    }
   }, []);
 
   return (
@@ -190,14 +141,23 @@ export default function Donations() {
             </div>
             <div className="h-[1px] bg-white/10"></div>
             <div className="flex flex-col items-center gap-3">
-              {/*
-                PayPal Donate SDK button — Part 2 of PayPal's generated code.
-                The script (Part 1) is loaded dynamically in the useEffect above.
-              */}
-              <div id="donate-button-container" className="w-full flex justify-center min-h-[52px]"></div>
-              <p className="text-[10px] text-white/30 tracking-widest uppercase text-center">
-                Secured by PayPal
-              </p>
+              <form
+                action="https://www.paypal.com/ncp/payment/QZZJ8PS92P6DL"
+                method="post"
+                target="_blank"
+                style={{ display: "inline-grid", justifyItems: "center", alignContent: "start", gap: "0.5rem" }}
+              >
+                <input className="pp-QZZJ8PS92P6DL" type="submit" value="Donate" />
+                <img src="https://www.paypalobjects.com/images/Debit_Credit_APM.svg" alt="cards" />
+                <section style={{ fontSize: "0.75rem" }}>
+                  Powered by{" "}
+                  <img
+                    src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-wordmark-color.svg"
+                    alt="paypal"
+                    style={{ height: "0.875rem", verticalAlign: "middle" }}
+                  />
+                </section>
+              </form>
             </div>
           </div>
 
