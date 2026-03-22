@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Menu, X, Heart, Shield, Server, Wrench } from "lucide-react";
+import { Menu, X, Heart, Shield, Server, Wrench, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 // Assets
 import logoImg from "@assets/MDFNEW_1771880281933.png";
@@ -141,23 +142,14 @@ export default function Donations() {
             </div>
             <div className="h-[1px] bg-white/10"></div>
             <div className="flex flex-col items-center gap-3">
-              <form
-                action="https://www.paypal.com/ncp/payment/QZZJ8PS92P6DL"
-                method="post"
-                target="_blank"
-                style={{ display: "inline-grid", justifyItems: "center", alignContent: "start", gap: "0.5rem" }}
-              >
-                <input className="pp-QZZJ8PS92P6DL" type="submit" value="Donate" />
-                <img src="https://www.paypalobjects.com/images/Debit_Credit_APM.svg" alt="cards" />
-                <section style={{ fontSize: "0.75rem" }}>
-                  Powered by{" "}
-                  <img
-                    src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-wordmark-color.svg"
-                    alt="paypal"
-                    style={{ height: "0.875rem", verticalAlign: "middle" }}
-                  />
-                </section>
-              </form>
+              <a href="https://www.paypal.com/donate/?hosted_button_id=5MSRRLCDR6XFC" target="_blank" rel="noopener noreferrer">
+                <Button size="lg" className="bg-white text-black hover:bg-white/90 rounded-none font-heading text-sm tracking-[0.3em] uppercase h-14 px-12 group">
+                  Donate Now <ChevronRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </a>
+              <p className="text-[10px] text-white/30 tracking-widest uppercase text-center">
+                Secured by PayPal
+              </p>
             </div>
           </div>
 
