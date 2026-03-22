@@ -5,11 +5,8 @@ import { Menu, X, Heart, Shield, Server, Wrench } from "lucide-react";
 import logoImg from "@assets/MDFNEW_1771880281933.png";
 
 // ─── PayPal configuration ─────────────────────────────────────────────────────
-// Replace these two values with your real IDs from your PayPal dashboard:
-//   DONATE_BUTTON_ID  → paypal.com/donate/buttons  (hosted donate button ID)
-//   SUBSCRIPTION_PLAN_ID → paypal.com/billing/plans  (subscription plan ID)
-const DONATE_BUTTON_ID = "REPLACE_WITH_BUTTON_ID";
-const SUBSCRIPTION_PLAN_ID = "REPLACE_WITH_PLAN_ID";
+// Hosted donate button ID from paypal.com/donate/buttons
+const DONATE_BUTTON_ID = "QZZJ8PS92P6DL";
 // ─────────────────────────────────────────────────────────────────────────────
 
 declare global {
@@ -18,9 +15,6 @@ declare global {
       Donation: {
         Button: (cfg: object) => { render: (sel: string) => void };
       };
-    };
-    paypal?: {
-      Buttons: (cfg: object) => { render: (sel: string) => void };
     };
   }
 }
@@ -37,10 +31,11 @@ export default function Donations() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // ── PayPal Donate SDK (one-time donation) ─────────────────────────────────
+  // ── PayPal Donate SDK ────────────────────────────────────────────────────────
   // Mirrors PayPal's generated code:
   //   Part 1: <script src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js">
   //   Part 2: PayPal.Donation.Button({...}).render('#donate-button-container')
+  // The hosted button already lets donors choose one-time or recurring at checkout.
   useEffect(() => {
     const containerId = "donate-button-container";
     const container = document.getElementById(containerId);
@@ -65,44 +60,6 @@ export default function Donations() {
       script.id = "paypal-donate-sdk";
       script.src = "https://www.paypalobjects.com/donate/sdk/donate-sdk.js";
       script.charset = "UTF-8";
-      script.onload = init;
-      document.head.appendChild(script);
-    }
-  }, []);
-
-  // ── PayPal JS SDK (monthly subscription) ─────────────────────────────────
-  // Mirrors PayPal's generated code:
-  //   Part 1: <script src="https://www.paypal.com/sdk/js?client-id=...&vault=true&intent=subscription">
-  //   Part 2: paypal.Buttons({ createSubscription, onApprove }).render('#paypal-button-container')
-  useEffect(() => {
-    const containerId = "paypal-subscription-container";
-    const container = document.getElementById(containerId);
-    if (!container || container.childElementCount > 0) return;
-
-    const init = () => {
-      window.paypal?.Buttons({
-        style: {
-          shape: "rect",
-          color: "gold",
-          layout: "vertical",
-          label: "subscribe",
-        },
-        createSubscription: (_data: unknown, actions: { subscription: { create: (o: object) => Promise<string> } }) => {
-          return actions.subscription.create({ plan_id: SUBSCRIPTION_PLAN_ID });
-        },
-        onApprove: (data: { subscriptionID: string }) => {
-          alert(`Subscription active! ID: ${data.subscriptionID}`);
-        },
-      }).render(`#${containerId}`);
-    };
-
-    if (window.paypal) {
-      init();
-    } else {
-      const script = document.createElement("script");
-      script.id = "paypal-subscription-sdk";
-      // NOTE: replace the client-id value with your PayPal REST app client ID
-      script.src = "https://www.paypal.com/sdk/js?client-id=REPLACE_WITH_CLIENT_ID&vault=true&intent=subscription";
       script.onload = init;
       document.head.appendChild(script);
     }
@@ -216,60 +173,31 @@ export default function Donations() {
         </div>
       </section>
 
-      {/* Donation Options */}
+      {/* Donation */}
       <section className="py-32 border-t border-white/5">
         <div className="container mx-auto px-4 md:px-8">
           <h2 className="text-3xl md:text-5xl font-heading font-black mb-4 tracking-tighter uppercase text-center">
-            Choose Your <span className="text-white/20">Contribution</span>
+            Make a <span className="text-white/20">Contribution</span>
           </h2>
           <p className="text-center text-muted-foreground mb-16 text-sm tracking-[0.3em] uppercase">One-time or recurring — every bit helps</p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
-
-            {/* One-Time Donation */}
-            <div className="border border-white/10 p-8 bg-zinc-900/30 flex flex-col gap-6">
-              <div>
-                <h3 className="font-heading text-2xl font-bold tracking-widest uppercase mb-2">One-Time Donation</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Make a single contribution of any amount to help cover operational costs.
-                </p>
-              </div>
-              <div className="h-[1px] bg-white/10"></div>
-              <div className="flex flex-col items-center gap-3">
-                {/*
-                  PayPal Donate SDK button — rendered here by the useEffect above.
-                  Set DONATE_BUTTON_ID at the top of this file to your hosted button ID.
-                */}
-                <div id="donate-button-container" className="w-full flex justify-center min-h-[52px]"></div>
-                <p className="text-[10px] text-white/30 tracking-widest uppercase text-center">
-                  Secured by PayPal
-                </p>
-              </div>
+          <div className="max-w-lg mx-auto border border-white/10 p-10 bg-zinc-900/30 flex flex-col gap-6">
+            <div>
+              <h3 className="font-heading text-2xl font-bold tracking-widest uppercase mb-2">Support M.D.F</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Contribute any amount to help keep the servers and infrastructure running. PayPal lets you choose a one-time or recurring donation at checkout.
+              </p>
             </div>
-
-            {/* Monthly Subscription */}
-            <div className="border border-white/20 p-8 bg-zinc-900/30 flex flex-col gap-6 relative">
-              <div className="absolute top-0 right-0 bg-white text-black text-[10px] font-heading font-bold tracking-[0.3em] uppercase px-3 py-1">
-                Recommended
-              </div>
-              <div>
-                <h3 className="font-heading text-2xl font-bold tracking-widest uppercase mb-2">Monthly Support</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Set up a recurring monthly contribution to provide consistent support for the team's infrastructure.
-                </p>
-              </div>
-              <div className="h-[1px] bg-white/10"></div>
-              <div className="flex flex-col items-center gap-3">
-                {/*
-                  PayPal JS SDK subscription button — rendered here by the useEffect above.
-                  Set SUBSCRIPTION_PLAN_ID and replace client-id in the script src at the
-                  top of this file with your PayPal REST app client ID.
-                */}
-                <div id="paypal-subscription-container" className="w-full flex justify-center min-h-[52px]"></div>
-                <p className="text-[10px] text-white/30 tracking-widest uppercase text-center">
-                  Cancel anytime // Secured by PayPal
-                </p>
-              </div>
+            <div className="h-[1px] bg-white/10"></div>
+            <div className="flex flex-col items-center gap-3">
+              {/*
+                PayPal Donate SDK button — Part 2 of PayPal's generated code.
+                The script (Part 1) is loaded dynamically in the useEffect above.
+              */}
+              <div id="donate-button-container" className="w-full flex justify-center min-h-[52px]"></div>
+              <p className="text-[10px] text-white/30 tracking-widest uppercase text-center">
+                Secured by PayPal
+              </p>
             </div>
           </div>
 
