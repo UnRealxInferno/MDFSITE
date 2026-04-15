@@ -12,14 +12,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Stop app on VPS
-        uses: appleboy/ssh-action@v1.2.2
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          password: ${{ secrets.VPS_PASSWORD }}
-          script: taskkill /F /T /IM node.exe 2>nul & ping -n 4 127.0.0.1 >nul 2>&1 & exit 0
-
       - name: Pull latest code on VPS
         uses: appleboy/ssh-action@v1.2.2
         with:
@@ -28,12 +20,3 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
             cd /d "D:\MDF WEBSITE\Website" && git fetch origin main && git reset --hard origin/main
-
-      - name: Start static server on VPS
-        uses: appleboy/ssh-action@v1.2.2
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          password: ${{ secrets.VPS_PASSWORD }}
-          script: |
-            cd /d "D:\MDF WEBSITE\Website" && start /B npx serve public -l 5000 > "D:\MDF WEBSITE\Website\app.log" 2>&1
